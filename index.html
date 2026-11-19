@@ -359,25 +359,21 @@ async function loadNextAppointment() {
     }
 }
 
-    async function loadNote() {
+async function loadNote() {
 
     const calendar = encodeURIComponent(CALENDAR_ID);
 
     const now = new Date();
 
-    const start = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate(),
-        0, 0, 0
-    );
+    /*
+       Look backwards for NOTE events.
+       Future notes are deliberately excluded until their date arrives.
+    */
+    const start = new Date(now);
+    start.setFullYear(start.getFullYear() - 1);
 
-    const end = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate() + 1,
-        0, 0, 0
-    );
+    const end = new Date(now);
+    end.setHours(23, 59, 59, 999);
 
     const url =
         "https://www.googleapis.com/calendar/v3/calendars/" +
@@ -385,8 +381,10 @@ async function loadNextAppointment() {
         "/events" +
         "?key=" + encodeURIComponent(API_KEY) +
         "&singleEvents=true" +
+        "&orderBy=startTime" +
         "&timeMin=" + encodeURIComponent(start.toISOString()) +
-        "&timeMax=" + encodeURIComponent(end.toISOString());
+        "&timeMax=" + encodeURIComponent(end.toISOString()) +
+        "&maxResults=250";
 
     try {
 
@@ -398,18 +396,26 @@ async function loadNextAppointment() {
 
         const data = await response.json();
 
-        const noteEvent = (data.items || []).find(event =>
+        const notes = (data.items || []).filter(event =>
             (event.summary || "").trim().toUpperCase() === "NOTE"
         );
 
-        if (noteEvent) {
+        if (notes.length > 0) {
+
+            /* Google returned them oldest -> newest */
+            const latestNote = notes[notes.length - 1];
+
             document.getElementById("note").textContent =
-                noteEvent.description || "";
-        } else {
-            document.getElementById("note").textContent = "";
+                latestNote.description || "";
+
         }
 
     } catch (error) {
+
+        /*
+           Deliberately leave the existing note on screen
+           if Google temporarily can't be reached.
+        */
         console.error("Note error:", error);
     }
 }
