@@ -172,17 +172,12 @@ html, body {
         <div id="time" class="time">1:45 PM</div>
     </section>
 
-    <section class="appointment">
-        <div class="heading">Next appointment</div>
-        <div class="appointment-day">Tomorrow</div>
-        <div class="appointment-title">
-            Doctor<br>
-            10:30 AM
-        </div>
-        <div class="appointment-note">
-            Jason will pick you up at 10:00.
-        </div>
-    </section>
+<section class="appointment">
+    <div class="heading">Next appointment</div>
+    <div id="appointment-day" class="appointment-day">Checking calendar...</div>
+    <div id="appointment-title" class="appointment-title"></div>
+    <div id="appointment-note" class="appointment-note"></div>
+</section>
 
     <section class="period-area">
         <div class="periods">
@@ -252,6 +247,127 @@ function updateClock() {
 
 updateClock();
 setInterval(updateClock, 1000);
+
+const CALENDAR_ID = "624e8652b70f716d7fb9ef44420b49c8e31ab5af4a3766beba5d2fa2018b6788@group.calendar.google.com";
+
+const API_KEY = "AIzaSyAbWHL97Yw0g9qLeNkrfdAXSxmmLU160RI";
+
+
+function friendlyDay(date) {
+    const now = new Date();
+
+    const today = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate()
+    );
+
+    const eventDay = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate()
+    );
+
+    const diff = Math.round(
+        (eventDay - today) / 86400000
+    );
+
+    if (diff === 0) return "Today";
+    if (diff === 1) return "Tomorrow";
+
+    return date.toLocaleDateString("en-AU", {
+        weekday: "long",
+        day: "numeric",
+        month: "long"
+    });
+}
+
+
+async function loadNextAppointment() {
+
+    const calendar = encodeURIComponent(CALENDAR_ID);
+
+    const url =
+        "https://www.googleapis.com/calendar/v3/calendars/" +
+        calendar +
+        "/events" +
+        "?key=" + encodeURIComponent(API_KEY) +
+        "&singleEvents=true" +
+        "&orderBy=startTime" +
+        "&maxResults=1" +
+        "&timeMin=" + encodeURIComponent(new Date().toISOString());
+
+    try {
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error("Google Calendar returned " + response.status);
+        }
+
+        const data = await response.json();
+
+        if (!data.items || data.items.length === 0) {
+
+            document.getElementById("appointment-day").textContent =
+                "Nothing coming up";
+
+            document.getElementById("appointment-title").textContent = "";
+
+            document.getElementById("appointment-note").textContent = "";
+
+            return;
+        }
+
+        const event = data.items[0];
+
+        const startValue =
+            event.start.dateTime ||
+            event.start.date;
+
+        const start = new Date(startValue);
+
+        const time = event.start.dateTime
+            ? start.toLocaleTimeString("en-AU", {
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true
+            })
+            : "All day";
+
+        document.getElementById("appointment-day").textContent =
+            friendlyDay(start);
+
+        document.getElementById("appointment-title").innerHTML =
+            escapeHTML(event.summary || "Appointment") +
+            "<br>" +
+            escapeHTML(time);
+
+        document.getElementById("appointment-note").textContent =
+            event.description || "";
+
+    } catch (error) {
+
+        console.error("Calendar error:", error);
+
+        document.getElementById("appointment-day").textContent =
+            "Calendar unavailable";
+    }
+}
+
+
+function escapeHTML(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+
+loadNextAppointment();
+
+/* Check for calendar changes every five minutes */
+setInterval(loadNextAppointment, 5 * 60 * 1000);
+    
 </script>
 
 </body>
