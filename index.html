@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mum's Noticeboard</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #101214;
+    color: #f7f7f5;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.dashboard {
+    height: 100vh;
+    width: 100vw;
+    padding: 5vh 5vw;
+    display: grid;
+    grid-template-columns: 53% 47%;
+    grid-template-rows: 55% 45%;
+}
+
+/* LEFT TOP */
+
+.clock-area {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 4vw;
+}
+
+.day {
+    font-size: 8vw;
+    line-height: 0.95;
+    font-weight: 700;
+    letter-spacing: -0.15vw;
+}
+
+.date {
+    margin-top: 2vh;
+    font-size: 3vw;
+    color: #c9c9c5;
+}
+
+.time {
+    margin-top: 4vh;
+    font-size: 7vw;
+    line-height: 1;
+    font-weight: 300;
+}
+
+/* RIGHT TOP */
+
+.appointment {
+    border-left: 2px solid #555;
+    padding-left: 4vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.heading {
+    color: #8f969e;
+    font-size: 1.6vw;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 2vh;
+}
+
+.appointment-day {
+    font-size: 2.7vw;
+    font-weight: 600;
+}
+
+.appointment-title {
+    margin-top: 1.5vh;
+    font-size: 3.5vw;
+    line-height: 1.15;
+}
+
+.appointment-note {
+    margin-top: 2vh;
+    color: #c9c9c5;
+    font-size: 2vw;
+    line-height: 1.35;
+}
+
+/* LEFT BOTTOM */
+
+.period-area {
+    display: flex;
+    align-items: center;
+    padding-right: 4vw;
+}
+
+.periods {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.7vw;
+}
+
+.period {
+    text-align: center;
+    padding: 2vh 0;
+    color: #777;
+    border-top: 4px solid #363a3d;
+    font-size: 1.45vw;
+}
+
+.period.active {
+    color: #ffffff;
+    border-top-color: #e6b94a;
+    font-weight: 600;
+}
+
+/* RIGHT BOTTOM */
+
+.note-area {
+    border-left: 2px solid #555;
+    padding-left: 4vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.note {
+    font-size: 3vw;
+    line-height: 1.3;
+    max-width: 90%;
+}
+
+.from {
+    margin-top: 2.5vh;
+    color: #a7aaad;
+    font-size: 1.7vw;
+}
+</style>
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <section class="clock-area">
+        <div id="day" class="day">THURSDAY</div>
+        <div id="date" class="date">19 November</div>
+        <div id="time" class="time">1:45 PM</div>
+    </section>
+
+    <section class="appointment">
+        <div class="heading">Next appointment</div>
+        <div class="appointment-day">Tomorrow</div>
+        <div class="appointment-title">
+            Doctor<br>
+            10:30 AM
+        </div>
+        <div class="appointment-note">
+            Jason will pick you up at 10:00.
+        </div>
+    </section>
+
+    <section class="period-area">
+        <div class="periods">
+            <div id="morning" class="period">Morning</div>
+            <div id="afternoon" class="period">Afternoon</div>
+            <div id="evening" class="period">Evening</div>
+            <div id="night" class="period">Night</div>
+        </div>
+    </section>
+
+    <section class="note-area">
+        <div class="heading">A note from Jason</div>
+
+        <div class="note">
+            I'll give you a call after dinner tonight.
+        </div>
+
+        <div class="from">
+            Love Jason ❤️
+        </div>
+    </section>
+
+</div>
+
+<script>
+function updateClock() {
+    const now = new Date();
+
+    const day = now.toLocaleDateString("en-AU", {
+        weekday: "long"
+    }).toUpperCase();
+
+    const date = now.toLocaleDateString("en-AU", {
+        day: "numeric",
+        month: "long"
+    });
+
+    const time = now.toLocaleTimeString("en-AU", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true
+    });
+
+    document.getElementById("day").textContent = day;
+    document.getElementById("date").textContent = date;
+    document.getElementById("time").textContent = time;
+
+    const hour = now.getHours();
+
+    document.querySelectorAll(".period")
+        .forEach(el => el.classList.remove("active"));
+
+    let active;
+
+    if (hour >= 5 && hour < 12) {
+        active = "morning";
+    } else if (hour >= 12 && hour < 17) {
+        active = "afternoon";
+    } else if (hour >= 17 && hour < 21) {
+        active = "evening";
+    } else {
+        active = "night";
+    }
+
+    document.getElementById(active).classList.add("active");
+}
+
+updateClock();
+setInterval(updateClock, 1000);
+</script>
+
+</body>
+</html>
