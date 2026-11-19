@@ -191,8 +191,8 @@ html, body {
     <section class="note-area">
         <div class="heading">A note from Jason</div>
 
-        <div class="note">
-            I'll give you a call after dinner tonight.
+        <div id="note" class="note">
+                Checking for a note...
         </div>
 
         <div class="from">
@@ -294,7 +294,7 @@ async function loadNextAppointment() {
         "?key=" + encodeURIComponent(API_KEY) +
         "&singleEvents=true" +
         "&orderBy=startTime" +
-        "&maxResults=1" +
+        "&maxResults=20" +
         "&timeMin=" + encodeURIComponent(new Date().toISOString());
 
     try {
@@ -306,20 +306,24 @@ async function loadNextAppointment() {
         }
 
         const data = await response.json();
+        const events = data.items || [];
 
-        if (!data.items || data.items.length === 0) {
+        const appointments = events.filter(event =>
+            (event.summary || "").trim().toUpperCase() !== "NOTE"
+        );
+
+        if (appointments.length === 0) {
 
             document.getElementById("appointment-day").textContent =
                 "Nothing coming up";
 
             document.getElementById("appointment-title").textContent = "";
-
             document.getElementById("appointment-note").textContent = "";
 
             return;
         }
 
-        const event = data.items[0];
+        const event = appointments[0];
 
         const startValue =
             event.start.dateTime ||
@@ -355,6 +359,60 @@ async function loadNextAppointment() {
     }
 }
 
+    async function loadNote() {
+
+    const calendar = encodeURIComponent(CALENDAR_ID);
+
+    const now = new Date();
+
+    const start = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        0, 0, 0
+    );
+
+    const end = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + 1,
+        0, 0, 0
+    );
+
+    const url =
+        "https://www.googleapis.com/calendar/v3/calendars/" +
+        calendar +
+        "/events" +
+        "?key=" + encodeURIComponent(API_KEY) +
+        "&singleEvents=true" +
+        "&timeMin=" + encodeURIComponent(start.toISOString()) +
+        "&timeMax=" + encodeURIComponent(end.toISOString());
+
+    try {
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error("Google Calendar returned " + response.status);
+        }
+
+        const data = await response.json();
+
+        const noteEvent = (data.items || []).find(event =>
+            (event.summary || "").trim().toUpperCase() === "NOTE"
+        );
+
+        if (noteEvent) {
+            document.getElementById("note").textContent =
+                noteEvent.description || "";
+        } else {
+            document.getElementById("note").textContent = "";
+        }
+
+    } catch (error) {
+        console.error("Note error:", error);
+    }
+}
 
 function escapeHTML(text) {
     const div = document.createElement("div");
@@ -364,9 +422,10 @@ function escapeHTML(text) {
 
 
 loadNextAppointment();
+loadNote();
 
-/* Check for calendar changes every five minutes */
 setInterval(loadNextAppointment, 5 * 60 * 1000);
+setInterval(loadNote, 5 * 60 * 1000);
     
 </script>
 
