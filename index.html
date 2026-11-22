@@ -218,11 +218,15 @@ body {
     <section class="clock-area">
         <div id="day" class="day">MONDAY</div>
         <div id="date" class="date">23 November</div>
-        <div id="time" class="time">8:40 AM</div>
+        <div id="time" class="time">8:50 AM</div>
     </section>
 
+
     <section class="appointment">
-        <div class="heading">Next appointment</div>
+
+        <div class="heading">
+            Next appointment
+        </div>
 
         <div
             id="appointment-day"
@@ -240,38 +244,48 @@ body {
             id="appointment-note"
             class="appointment-note"
         ></div>
+
     </section>
 
+
     <section class="medication-area">
+
         <div
             id="medication-card"
             class="medication-card"
         >
+
             <div
                 id="medication-period"
                 class="medication-period"
             >
-                MONDAY MORNING
+                MONDAY BREAKFAST
             </div>
 
             <div
                 id="medication-title"
                 class="medication-title"
             >
-                MORNING TABLETS
+                BREAKFAST TABLETS
             </div>
 
             <div
                 id="medication-instruction"
                 class="medication-instruction"
             >
-                Take the MORNING section from today's pack.
+                Take the BREAKFAST section from today's pack.
             </div>
+
         </div>
+
     </section>
 
+
     <section class="note-area">
-        <div class="heading">A note from Jason</div>
+
+        <div class="heading">
+            A note from Jason
+        </div>
 
         <div id="note" class="note">
             Checking for a note...
@@ -280,83 +294,119 @@ body {
         <div class="from">
             Love Jason ❤️
         </div>
+
     </section>
 
 </div>
 
 
 <script>
+
 const CALENDAR_ID =
     "624e8652b70f716d7fb9ef44420b49c8e31ab5af4a3766beba5d2fa2018b6788@group.calendar.google.com";
 
-const API_KEY = "AIzaSyAbWHL97Yw0g9qLeNkrfdAXSxmmLU160RI";
+const API_KEY =
+    "AIzaSyAbWHL97Yw0g9qLeNkrfdAXSxmmLU160RI";
 
 
 function updateClock() {
+
     const now = new Date();
 
-    const day = now.toLocaleDateString("en-AU", {
-        weekday: "long"
-    }).toUpperCase();
+    const day = now.toLocaleDateString(
+        "en-AU",
+        {
+            weekday: "long"
+        }
+    ).toUpperCase();
 
-    const date = now.toLocaleDateString("en-AU", {
-        day: "numeric",
-        month: "long"
-    });
+    const date = now.toLocaleDateString(
+        "en-AU",
+        {
+            day: "numeric",
+            month: "long"
+        }
+    );
 
-    const time = now.toLocaleTimeString("en-AU", {
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true
-    });
+    const time = now.toLocaleTimeString(
+        "en-AU",
+        {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true
+        }
+    );
 
-    document.getElementById("day").textContent = day;
-    document.getElementById("date").textContent = date;
-    document.getElementById("time").textContent = time;
+    document.getElementById("day").textContent =
+        day;
+
+    document.getElementById("date").textContent =
+        date;
+
+    document.getElementById("time").textContent =
+        time;
 
     updateMedicationReminder(now, day);
 }
 
 
 function updateMedicationReminder(now, dayName) {
+
     const hour = now.getHours();
 
     const card =
-        document.getElementById("medication-card");
+        document.getElementById(
+            "medication-card"
+        );
 
     const period =
-        document.getElementById("medication-period");
+        document.getElementById(
+            "medication-period"
+        );
 
     const title =
-        document.getElementById("medication-title");
+        document.getElementById(
+            "medication-title"
+        );
 
     const instruction =
-        document.getElementById("medication-instruction");
+        document.getElementById(
+            "medication-instruction"
+        );
 
-    card.classList.remove("evening", "none");
+    card.classList.remove(
+        "evening",
+        "none"
+    );
+
 
     /*
-        07:00 to 10:59
-        Morning tablets
+        07:00 - 10:59
+        BREAKFAST
     */
+
     if (hour >= 7 && hour < 11) {
+
         period.textContent =
-            dayName + " MORNING";
+            dayName + " BREAKFAST";
 
         title.textContent =
-            "MORNING TABLETS";
+            "BREAKFAST TABLETS";
 
         instruction.textContent =
-            "Take the MORNING section from today's pack.";
+            "Take the BREAKFAST section from today's pack.";
 
         return;
     }
 
+
     /*
-        11:00 to 15:59
-        No tablets due
+        11:00 - 15:59
+        NOTHING DUE
     */
+
     if (hour >= 11 && hour < 16) {
+
         card.classList.add("none");
 
         period.textContent =
@@ -371,14 +421,14 @@ function updateMedicationReminder(now, dayName) {
         return;
     }
 
-    /*
-        16:00 to 19:59
-        Dinner / bed tablets
 
-        The tablet normally enters scheduled sleep
-        at 20:00.
+    /*
+        16:00 - 19:59
+        DINNER / BED
     */
+
     if (hour >= 16 && hour < 20) {
+
         card.classList.add("evening");
 
         period.textContent =
@@ -393,22 +443,29 @@ function updateMedicationReminder(now, dayName) {
         return;
     }
 
+
     /*
-        Before 07:00 and after 20:00.
-        Normally not visible because Fully is sleeping.
+        Before 07:00 or from 20:00 onwards.
+
+        Normally this won't be seen because
+        Fully Kiosk has the screen asleep.
     */
+
     card.classList.add("none");
 
-    period.textContent = dayName;
+    period.textContent =
+        dayName;
 
     title.textContent =
         "NO TABLETS DUE";
 
-    instruction.textContent = "";
+    instruction.textContent =
+        "";
 }
 
 
 function friendlyDay(date) {
+
     const now = new Date();
 
     const today = new Date(
@@ -435,15 +492,19 @@ function friendlyDay(date) {
         return "Tomorrow";
     }
 
-    return date.toLocaleDateString("en-AU", {
-        weekday: "long",
-        day: "numeric",
-        month: "long"
-    });
+    return date.toLocaleDateString(
+        "en-AU",
+        {
+            weekday: "long",
+            day: "numeric",
+            month: "long"
+        }
+    );
 }
 
 
 async function loadNextAppointment() {
+
     const calendar =
         encodeURIComponent(CALENDAR_ID);
 
@@ -451,83 +512,122 @@ async function loadNextAppointment() {
         "https://www.googleapis.com/calendar/v3/calendars/" +
         calendar +
         "/events" +
-        "?key=" + encodeURIComponent(API_KEY) +
+        "?key=" +
+        encodeURIComponent(API_KEY) +
         "&singleEvents=true" +
         "&orderBy=startTime" +
         "&maxResults=20" +
         "&timeMin=" +
-        encodeURIComponent(new Date().toISOString());
+        encodeURIComponent(
+            new Date().toISOString()
+        );
 
     try {
-        const response = await fetch(url);
+
+        const response =
+            await fetch(url);
 
         if (!response.ok) {
+
             throw new Error(
                 "Google Calendar returned " +
                 response.status
             );
         }
 
-        const data = await response.json();
-        const events = data.items || [];
+        const data =
+            await response.json();
 
-        const appointments = events.filter(event =>
-            (event.summary || "")
-                .trim()
-                .toUpperCase() !== "NOTE"
-        );
+        const events =
+            data.items || [];
+
+
+        /*
+            NOTE events must never appear
+            as appointments.
+        */
+
+        const appointments =
+            events.filter(
+                event =>
+                    (event.summary || "")
+                        .trim()
+                        .toUpperCase()
+                    !== "NOTE"
+            );
+
 
         if (appointments.length === 0) {
+
             document.getElementById(
                 "appointment-day"
-            ).textContent = "Nothing coming up";
+            ).textContent =
+                "Nothing coming up";
 
             document.getElementById(
                 "appointment-title"
-            ).textContent = "";
+            ).textContent =
+                "";
 
             document.getElementById(
                 "appointment-note"
-            ).textContent = "";
+            ).textContent =
+                "";
 
             return;
         }
 
-        const event = appointments[0];
+
+        const event =
+            appointments[0];
 
         const startValue =
             event.start.dateTime ||
             event.start.date;
 
-        const start = new Date(startValue);
+        const start =
+            new Date(startValue);
 
-        const time = event.start.dateTime
-            ? start.toLocaleTimeString("en-AU", {
-                hour: "numeric",
-                minute: "2-digit",
-                hour12: true
-            })
-            : "All day";
+
+        const time =
+            event.start.dateTime
+                ? start.toLocaleTimeString(
+                    "en-AU",
+                    {
+                        hour: "numeric",
+                        minute: "2-digit",
+                        hour12: true
+                    }
+                )
+                : "All day";
+
 
         document.getElementById(
             "appointment-day"
-        ).textContent = friendlyDay(start);
+        ).textContent =
+            friendlyDay(start);
+
 
         document.getElementById(
             "appointment-title"
         ).innerHTML =
             escapeHTML(
-                event.summary || "Appointment"
+                event.summary ||
+                "Appointment"
             ) +
             "<br>" +
             escapeHTML(time);
+
 
         document.getElementById(
             "appointment-note"
         ).textContent =
             event.description || "";
 
-    } catch (error) {
+    }
+
+    catch (error) {
+
         console.error(
             "Calendar error:",
             error
@@ -542,63 +642,97 @@ async function loadNextAppointment() {
 
 
 async function loadNote() {
+
     const calendar =
         encodeURIComponent(CALENDAR_ID);
 
-    const now = new Date();
+    const now =
+        new Date();
+
 
     /*
-        Search backwards for NOTE events.
+        Look backwards for NOTE events.
 
-        Future notes are excluded until their
-        scheduled date arrives.
+        Future NOTE events are ignored until
+        their scheduled day arrives.
+
+        The most recent eligible NOTE remains
+        displayed until a newer NOTE becomes
+        eligible.
     */
-    const start = new Date(now);
+
+    const start =
+        new Date(now);
+
     start.setFullYear(
         start.getFullYear() - 1
     );
 
-    const end = new Date(now);
-    end.setHours(23, 59, 59, 999);
+
+    const end =
+        new Date(now);
+
+    end.setHours(
+        23,
+        59,
+        59,
+        999
+    );
+
 
     const url =
         "https://www.googleapis.com/calendar/v3/calendars/" +
         calendar +
         "/events" +
-        "?key=" + encodeURIComponent(API_KEY) +
+        "?key=" +
+        encodeURIComponent(API_KEY) +
         "&singleEvents=true" +
         "&orderBy=startTime" +
         "&timeMin=" +
-        encodeURIComponent(start.toISOString()) +
+        encodeURIComponent(
+            start.toISOString()
+        ) +
         "&timeMax=" +
-        encodeURIComponent(end.toISOString()) +
+        encodeURIComponent(
+            end.toISOString()
+        ) +
         "&maxResults=250";
 
+
     try {
-        const response = await fetch(url);
+
+        const response =
+            await fetch(url);
 
         if (!response.ok) {
+
             throw new Error(
                 "Google Calendar returned " +
                 response.status
             );
         }
 
-        const data = await response.json();
 
-        const notes = (data.items || []).filter(event =>
-            (event.summary || "")
-                .trim()
-                .toUpperCase() === "NOTE"
-        );
+        const data =
+            await response.json();
+
+
+        const notes =
+            (data.items || []).filter(
+                event =>
+                    (event.summary || "")
+                        .trim()
+                        .toUpperCase()
+                    === "NOTE"
+            );
+
 
         if (notes.length > 0) {
-            /*
-                Google returned the events
-                from oldest to newest.
-            */
+
             const latestNote =
-                notes[notes.length - 1];
+                notes[
+                    notes.length - 1
+                ];
 
             document.getElementById(
                 "note"
@@ -606,11 +740,16 @@ async function loadNote() {
                 latestNote.description || "";
         }
 
-    } catch (error) {
+    }
+
+    catch (error) {
+
         /*
-            Keep the existing displayed note if
-            Google is temporarily unavailable.
+            If internet or Google Calendar is
+            temporarily unavailable, leave the
+            currently displayed note alone.
         */
+
         console.error(
             "Note error:",
             error
@@ -620,23 +759,44 @@ async function loadNote() {
 
 
 function escapeHTML(text) {
+
     const div =
         document.createElement("div");
 
-    div.textContent = text;
+    div.textContent =
+        text;
 
     return div.innerHTML;
 }
 
 
+/*
+    INITIAL LOAD
+*/
+
 updateClock();
 loadNextAppointment();
 loadNote();
+
+
+/*
+    CLOCK + MEDICATION STATE
+
+    Runs every second so the medication panel
+    changes automatically at 11:00 and 16:00.
+*/
 
 setInterval(
     updateClock,
     1000
 );
+
+
+/*
+    CLOUD CONTENT
+
+    Recheck Google Calendar every 5 minutes.
+*/
 
 setInterval(
     loadNextAppointment,
@@ -647,6 +807,7 @@ setInterval(
     loadNote,
     5 * 60 * 1000
 );
+
 </script>
 
 </body>
