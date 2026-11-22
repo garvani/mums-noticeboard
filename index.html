@@ -3,14 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mum's Noticeboard.</title>
+
+<title>Mum's Noticeboard</title>
 
 <style>
 * {
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     margin: 0;
     width: 100%;
     height: 100%;
@@ -21,15 +23,17 @@ html, body {
 }
 
 .dashboard {
-    height: 100vh;
     width: 100vw;
+    height: 100vh;
     padding: 2.5vh 3vw;
+
     display: grid;
     grid-template-columns: 53% 47%;
     grid-template-rows: 55% 45%;
 }
 
-/* LEFT TOP */
+
+/* LEFT TOP: DATE AND TIME */
 
 .clock-area {
     display: flex;
@@ -58,7 +62,19 @@ html, body {
     font-weight: 300;
 }
 
-/* RIGHT TOP */
+
+/* SHARED SECTION HEADING */
+
+.heading {
+    margin-bottom: 2vh;
+    color: #8f969e;
+    font-size: 1.6vw;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+}
+
+
+/* RIGHT TOP: NEXT APPOINTMENT */
 
 .appointment {
     align-self: center;
@@ -80,18 +96,6 @@ html, body {
 
 .appointment-day {
     color: #e7a900;
-}
-
-    
-.heading {
-    color: #8f969e;
-    font-size: 1.6vw;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    margin-bottom: 2vh;
-}
-
-.appointment-day {
     font-size: 2.7vw;
     font-weight: 600;
 }
@@ -109,49 +113,94 @@ html, body {
     line-height: 1.35;
 }
 
-/* LEFT BOTTOM */
 
-.period-area {
+/* LEFT BOTTOM: MEDICATION REMINDER */
+
+.medication-area {
     display: flex;
     align-items: center;
     padding-right: 4vw;
 }
 
-.periods {
+.medication-card {
     width: 100%;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.7vw;
+    padding: 3vh 3vw;
+
+    background: #102c30;
+    border: 2px solid #257c83;
+    border-radius: 22px;
 }
 
-.period {
-    text-align: center;
-    padding: 2vh 0;
-    color: #777;
-    border-top: 4px solid #363a3d;
-    font-size: 1.45vw;
+.medication-period {
+    color: #65ccd0;
+    font-size: 2vw;
+    font-weight: 700;
+    letter-spacing: 0.08em;
 }
 
-.period.active {
+.medication-title {
+    margin-top: 1.5vh;
     color: #ffffff;
-    border-top-color: #e6b94a;
-    font-weight: 600;
+    font-size: 3.3vw;
+    line-height: 1.05;
+    font-weight: 700;
 }
 
-/* RIGHT BOTTOM */
+.medication-instruction {
+    margin-top: 2vh;
+    color: #d9e4e4;
+    font-size: 1.8vw;
+    line-height: 1.3;
+}
+
+
+/* DINNER / BED MEDICATION */
+
+.medication-card.evening {
+    background: #191b3b;
+    border-color: #6268bd;
+}
+
+.medication-card.evening .medication-period {
+    color: #aeb2ff;
+}
+
+
+/* NO MEDICATION DUE */
+
+.medication-card.none {
+    background: #191b1d;
+    border-color: #45494d;
+}
+
+.medication-card.none .medication-period {
+    color: #999fa4;
+}
+
+.medication-card.none .medication-title {
+    color: #d0d2d3;
+}
+
+.medication-card.none .medication-instruction {
+    color: #8f9498;
+}
+
+
+/* RIGHT BOTTOM: NOTE */
 
 .note-area {
     border-left: 2px solid #555;
     padding-left: 4vw;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
 .note {
+    max-width: 90%;
     font-size: 3vw;
     line-height: 1.3;
-    max-width: 90%;
 }
 
 .from {
@@ -167,24 +216,57 @@ html, body {
 <div class="dashboard">
 
     <section class="clock-area">
-        <div id="day" class="day">THURSDAY</div>
-        <div id="date" class="date">19 November</div>
-        <div id="time" class="time">1:45 PM</div>
+        <div id="day" class="day">MONDAY</div>
+        <div id="date" class="date">23 November</div>
+        <div id="time" class="time">8:40 AM</div>
     </section>
 
-<section class="appointment">
-    <div class="heading">Next appointment</div>
-    <div id="appointment-day" class="appointment-day">Checking calendar...</div>
-    <div id="appointment-title" class="appointment-title"></div>
-    <div id="appointment-note" class="appointment-note"></div>
-</section>
+    <section class="appointment">
+        <div class="heading">Next appointment</div>
 
-    <section class="period-area">
-        <div class="periods">
-            <div id="morning" class="period">Morning</div>
-            <div id="afternoon" class="period">Afternoon</div>
-            <div id="evening" class="period">Evening</div>
-            <div id="night" class="period">Night</div>
+        <div
+            id="appointment-day"
+            class="appointment-day"
+        >
+            Checking calendar...
+        </div>
+
+        <div
+            id="appointment-title"
+            class="appointment-title"
+        ></div>
+
+        <div
+            id="appointment-note"
+            class="appointment-note"
+        ></div>
+    </section>
+
+    <section class="medication-area">
+        <div
+            id="medication-card"
+            class="medication-card"
+        >
+            <div
+                id="medication-period"
+                class="medication-period"
+            >
+                MONDAY MORNING
+            </div>
+
+            <div
+                id="medication-title"
+                class="medication-title"
+            >
+                MORNING TABLETS
+            </div>
+
+            <div
+                id="medication-instruction"
+                class="medication-instruction"
+            >
+                Take the MORNING section from today's pack.
+            </div>
         </div>
     </section>
 
@@ -192,7 +274,7 @@ html, body {
         <div class="heading">A note from Jason</div>
 
         <div id="note" class="note">
-                Checking for a note...
+            Checking for a note...
         </div>
 
         <div class="from">
@@ -202,7 +284,14 @@ html, body {
 
 </div>
 
+
 <script>
+const CALENDAR_ID =
+    "624e8652b70f716d7fb9ef44420b49c8e31ab5af4a3766beba5d2fa2018b6788@group.calendar.google.com";
+
+const API_KEY = "PASTE-NEW-API-KEY-HERE";
+
+
 function updateClock() {
     const now = new Date();
 
@@ -225,32 +314,98 @@ function updateClock() {
     document.getElementById("date").textContent = date;
     document.getElementById("time").textContent = time;
 
-    const hour = now.getHours();
-
-    document.querySelectorAll(".period")
-        .forEach(el => el.classList.remove("active"));
-
-    let active;
-
-    if (hour >= 5 && hour < 12) {
-        active = "morning";
-    } else if (hour >= 12 && hour < 17) {
-        active = "afternoon";
-    } else if (hour >= 17 && hour < 21) {
-        active = "evening";
-    } else {
-        active = "night";
-    }
-
-    document.getElementById(active).classList.add("active");
+    updateMedicationReminder(now, day);
 }
 
-updateClock();
-setInterval(updateClock, 1000);
 
-const CALENDAR_ID = "624e8652b70f716d7fb9ef44420b49c8e31ab5af4a3766beba5d2fa2018b6788@group.calendar.google.com";
+function updateMedicationReminder(now, dayName) {
+    const hour = now.getHours();
 
-const API_KEY = "AIzaSyAbWHL97Yw0g9qLeNkrfdAXSxmmLU160RI";
+    const card =
+        document.getElementById("medication-card");
+
+    const period =
+        document.getElementById("medication-period");
+
+    const title =
+        document.getElementById("medication-title");
+
+    const instruction =
+        document.getElementById("medication-instruction");
+
+    card.classList.remove("evening", "none");
+
+    /*
+        07:00 to 10:59
+        Morning tablets
+    */
+    if (hour >= 7 && hour < 11) {
+        period.textContent =
+            dayName + " MORNING";
+
+        title.textContent =
+            "MORNING TABLETS";
+
+        instruction.textContent =
+            "Take the MORNING section from today's pack.";
+
+        return;
+    }
+
+    /*
+        11:00 to 15:59
+        No tablets due
+    */
+    if (hour >= 11 && hour < 16) {
+        card.classList.add("none");
+
+        period.textContent =
+            dayName + " AFTERNOON";
+
+        title.textContent =
+            "NO TABLETS DUE";
+
+        instruction.textContent =
+            "Next tablets are at dinner / bedtime.";
+
+        return;
+    }
+
+    /*
+        16:00 to 19:59
+        Dinner / bed tablets
+
+        The tablet normally enters scheduled sleep
+        at 20:00.
+    */
+    if (hour >= 16 && hour < 20) {
+        card.classList.add("evening");
+
+        period.textContent =
+            dayName + " EVENING";
+
+        title.textContent =
+            "DINNER / BED TABLETS";
+
+        instruction.textContent =
+            "Take the DINNER / BED section from today's pack.";
+
+        return;
+    }
+
+    /*
+        Before 07:00 and after 20:00.
+        Normally not visible because Fully is sleeping.
+    */
+    card.classList.add("none");
+
+    period.textContent = dayName;
+
+    title.textContent =
+        "NO TABLETS DUE";
+
+    instruction.textContent = "";
+}
 
 
 function friendlyDay(date) {
@@ -272,8 +427,13 @@ function friendlyDay(date) {
         (eventDay - today) / 86400000
     );
 
-    if (diff === 0) return "Today";
-    if (diff === 1) return "Tomorrow";
+    if (diff === 0) {
+        return "Today";
+    }
+
+    if (diff === 1) {
+        return "Tomorrow";
+    }
 
     return date.toLocaleDateString("en-AU", {
         weekday: "long",
@@ -284,8 +444,8 @@ function friendlyDay(date) {
 
 
 async function loadNextAppointment() {
-
-    const calendar = encodeURIComponent(CALENDAR_ID);
+    const calendar =
+        encodeURIComponent(CALENDAR_ID);
 
     const url =
         "https://www.googleapis.com/calendar/v3/calendars/" +
@@ -295,30 +455,40 @@ async function loadNextAppointment() {
         "&singleEvents=true" +
         "&orderBy=startTime" +
         "&maxResults=20" +
-        "&timeMin=" + encodeURIComponent(new Date().toISOString());
+        "&timeMin=" +
+        encodeURIComponent(new Date().toISOString());
 
     try {
-
         const response = await fetch(url);
 
         if (!response.ok) {
-            throw new Error("Google Calendar returned " + response.status);
+            throw new Error(
+                "Google Calendar returned " +
+                response.status
+            );
         }
 
         const data = await response.json();
         const events = data.items || [];
 
         const appointments = events.filter(event =>
-            (event.summary || "").trim().toUpperCase() !== "NOTE"
+            (event.summary || "")
+                .trim()
+                .toUpperCase() !== "NOTE"
         );
 
         if (appointments.length === 0) {
+            document.getElementById(
+                "appointment-day"
+            ).textContent = "Nothing coming up";
 
-            document.getElementById("appointment-day").textContent =
-                "Nothing coming up";
+            document.getElementById(
+                "appointment-title"
+            ).textContent = "";
 
-            document.getElementById("appointment-title").textContent = "";
-            document.getElementById("appointment-note").textContent = "";
+            document.getElementById(
+                "appointment-note"
+            ).textContent = "";
 
             return;
         }
@@ -339,38 +509,54 @@ async function loadNextAppointment() {
             })
             : "All day";
 
-        document.getElementById("appointment-day").textContent =
-            friendlyDay(start);
+        document.getElementById(
+            "appointment-day"
+        ).textContent = friendlyDay(start);
 
-        document.getElementById("appointment-title").innerHTML =
-            escapeHTML(event.summary || "Appointment") +
+        document.getElementById(
+            "appointment-title"
+        ).innerHTML =
+            escapeHTML(
+                event.summary || "Appointment"
+            ) +
             "<br>" +
             escapeHTML(time);
 
-        document.getElementById("appointment-note").textContent =
+        document.getElementById(
+            "appointment-note"
+        ).textContent =
             event.description || "";
 
     } catch (error) {
+        console.error(
+            "Calendar error:",
+            error
+        );
 
-        console.error("Calendar error:", error);
-
-        document.getElementById("appointment-day").textContent =
+        document.getElementById(
+            "appointment-day"
+        ).textContent =
             "Calendar unavailable";
     }
 }
 
-async function loadNote() {
 
-    const calendar = encodeURIComponent(CALENDAR_ID);
+async function loadNote() {
+    const calendar =
+        encodeURIComponent(CALENDAR_ID);
 
     const now = new Date();
 
     /*
-       Look backwards for NOTE events.
-       Future notes are deliberately excluded until their date arrives.
+        Search backwards for NOTE events.
+
+        Future notes are excluded until their
+        scheduled date arrives.
     */
     const start = new Date(now);
-    start.setFullYear(start.getFullYear() - 1);
+    start.setFullYear(
+        start.getFullYear() - 1
+    );
 
     const end = new Date(now);
     end.setHours(23, 59, 59, 999);
@@ -382,57 +568,85 @@ async function loadNote() {
         "?key=" + encodeURIComponent(API_KEY) +
         "&singleEvents=true" +
         "&orderBy=startTime" +
-        "&timeMin=" + encodeURIComponent(start.toISOString()) +
-        "&timeMax=" + encodeURIComponent(end.toISOString()) +
+        "&timeMin=" +
+        encodeURIComponent(start.toISOString()) +
+        "&timeMax=" +
+        encodeURIComponent(end.toISOString()) +
         "&maxResults=250";
 
     try {
-
         const response = await fetch(url);
 
         if (!response.ok) {
-            throw new Error("Google Calendar returned " + response.status);
+            throw new Error(
+                "Google Calendar returned " +
+                response.status
+            );
         }
 
         const data = await response.json();
 
         const notes = (data.items || []).filter(event =>
-            (event.summary || "").trim().toUpperCase() === "NOTE"
+            (event.summary || "")
+                .trim()
+                .toUpperCase() === "NOTE"
         );
 
         if (notes.length > 0) {
+            /*
+                Google returned the events
+                from oldest to newest.
+            */
+            const latestNote =
+                notes[notes.length - 1];
 
-            /* Google returned them oldest -> newest */
-            const latestNote = notes[notes.length - 1];
-
-            document.getElementById("note").textContent =
+            document.getElementById(
+                "note"
+            ).textContent =
                 latestNote.description || "";
-
         }
 
     } catch (error) {
-
         /*
-           Deliberately leave the existing note on screen
-           if Google temporarily can't be reached.
+            Keep the existing displayed note if
+            Google is temporarily unavailable.
         */
-        console.error("Note error:", error);
+        console.error(
+            "Note error:",
+            error
+        );
     }
 }
 
+
 function escapeHTML(text) {
-    const div = document.createElement("div");
+    const div =
+        document.createElement("div");
+
     div.textContent = text;
+
     return div.innerHTML;
 }
 
 
+updateClock();
 loadNextAppointment();
 loadNote();
 
-setInterval(loadNextAppointment, 5 * 60 * 1000);
-setInterval(loadNote, 5 * 60 * 1000);
-    
+setInterval(
+    updateClock,
+    1000
+);
+
+setInterval(
+    loadNextAppointment,
+    5 * 60 * 1000
+);
+
+setInterval(
+    loadNote,
+    5 * 60 * 1000
+);
 </script>
 
 </body>
