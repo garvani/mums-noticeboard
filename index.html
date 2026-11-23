@@ -251,32 +251,32 @@ body {
     <section class="medication-area">
 
         <div
-            id="medication-card"
-            class="medication-card"
-        >
+    id="medication-card"
+    class="medication-card"
+    >
 
-            <div
-                id="medication-period"
-                class="medication-period"
-            >
-                MONDAY BREAKFAST
-            </div>
+    <div
+        id="medication-period"
+        class="medication-period"
+    >
+        MONDAY MORNING
+    </div>
 
-            <div
-                id="medication-title"
-                class="medication-title"
-            >
-                BREAKFAST TABLETS
-            </div>
+    <div
+        id="medication-title"
+        class="medication-title"
+    >
+        BREAKFAST PILLS
+    </div>
 
-            <div
-                id="medication-instruction"
-                class="medication-instruction"
-            >
-                Take the BREAKFAST section from today's pack.
-            </div>
+    <div
+        id="medication-instruction"
+        class="medication-instruction"
+    >
+        Take Monday Breakfast pills from the pack.
+    </div>
 
-        </div>
+</div>
 
     </section>
 
@@ -350,117 +350,59 @@ function updateClock() {
 }
 
 
-function updateMedicationReminder(now, dayName) {
+function updateMedicationReminder(now) {
 
     const hour = now.getHours();
 
-    const card =
-        document.getElementById(
-            "medication-card"
-        );
+    // Day name in normal case, e.g. "Monday"
+    const dayName = now.toLocaleDateString("en-AU", { weekday: "long" });
+    const dayUpper = dayName.toUpperCase();
 
-    const period =
-        document.getElementById(
-            "medication-period"
-        );
+    const card = document.getElementById("medication-card");
+    const period = document.getElementById("medication-period");
+    const title = document.getElementById("medication-title");
+    const instruction = document.getElementById("medication-instruction");
 
-    const title =
-        document.getElementById(
-            "medication-title"
-        );
-
-    const instruction =
-        document.getElementById(
-            "medication-instruction"
-        );
-
-    card.classList.remove(
-        "evening",
-        "none"
-    );
+    card.classList.remove("evening", "none");
 
 
-    /*
-        07:00 - 10:59
-        BREAKFAST
-    */
-
+    // 7:00 - 10:59  BREAKFAST PILLS
     if (hour >= 7 && hour < 11) {
-
-        period.textContent =
-            dayName + " BREAKFAST";
-
-        title.textContent =
-            "BREAKFAST TABLETS";
-
+        period.textContent = dayUpper + " MORNING";
+        title.textContent = "BREAKFAST PILLS";
         instruction.textContent =
-            "Take the BREAKFAST section from today's pack.";
-
+            "Take " + dayName + " Breakfast pills from the pack.";
         return;
     }
 
 
-    /*
-        11:00 - 15:59
-        NOTHING DUE
-    */
-
+    // 11:00 - 15:59  NO PILLS
     if (hour >= 11 && hour < 16) {
-
         card.classList.add("none");
-
-        period.textContent =
-            dayName + " AFTERNOON";
-
-        title.textContent =
-            "NO TABLETS DUE";
-
+        period.textContent = dayUpper + " AFTERNOON";
+        title.textContent = "NO PILLS UNTIL BED";
         instruction.textContent =
-            "Next tablets are at dinner / bedtime.";
-
+            "Nothing to take now. Take " + dayName + " Bed pills tonight.";
         return;
     }
 
 
-    /*
-        16:00 - 19:59
-        DINNER / BED
-    */
-
+    // 16:00 - 19:59  BED PILLS
     if (hour >= 16 && hour < 20) {
-
         card.classList.add("evening");
-
-        period.textContent =
-            dayName + " EVENING";
-
-        title.textContent =
-            "DINNER / BED TABLETS";
-
+        period.textContent = dayUpper + " EVENING";
+        title.textContent = "BED PILLS";
         instruction.textContent =
-            "Take the DINNER / BED section from today's pack.";
-
+            "Take " + dayName + " Bed pills from the pack.";
         return;
     }
 
 
-    /*
-        Before 07:00 or from 20:00 onwards.
-
-        Normally this won't be seen because
-        Fully Kiosk has the screen asleep.
-    */
-
+    // Before 7:00 or from 20:00 (screen is normally asleep)
     card.classList.add("none");
-
-    period.textContent =
-        dayName;
-
-    title.textContent =
-        "NO TABLETS DUE";
-
-    instruction.textContent =
-        "";
+    period.textContent = dayUpper;
+    title.textContent = "NO PILLS DUE";
+    instruction.textContent = "";
 }
 
 
